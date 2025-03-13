@@ -20,5 +20,14 @@ public class CarEntity {
         private String color;
         private String description;
         private String motor;
-        private String amount;
+        private String price;
+        @ManyToOne(targetEntity = BrandEntity.class,fetch = FetchType.LAZY)
+        private BrandEntity brand;
+        @ManyToOne(targetEntity = FuelTypeEntity.class,fetch = FetchType.LAZY)
+        private FuelTypeEntity fuel;
+        @ManyToOne(targetEntity = CarTypeEntity.class,fetch = FetchType.LAZY)
+        private CarTypeEntity type;
+        @ManyToOne(targetEntity = TransmissionEntity.class,fetch = FetchType.LAZY)
+        private TransmissionEntity transmission;
+
         }

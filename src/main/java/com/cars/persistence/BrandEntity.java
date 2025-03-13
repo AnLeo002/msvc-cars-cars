@@ -3,6 +3,8 @@ package com.cars.persistence;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -15,4 +17,6 @@ public class BrandEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String brand;
+    @OneToMany(targetEntity = CarEntity.class,fetch = FetchType.LAZY,mappedBy = "brand")
+    private List<CarEntity> carList;
 }
