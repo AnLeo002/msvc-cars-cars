@@ -20,4 +20,5 @@ public class CarEntity {
         private String color;
         private String description;
         private String motor;
+        private String amount;
         }

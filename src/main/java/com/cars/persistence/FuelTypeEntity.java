@@ -7,12 +7,12 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brands")
-public class BrandEntity {
+@AllArgsConstructor
+@Table(name = "fuel-types")
+public class FuelTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String brand;
+    private String fuel;
 }
