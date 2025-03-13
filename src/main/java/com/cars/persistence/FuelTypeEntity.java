@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "fuel-types")
 public class FuelTypeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String fuel;
     @OneToMany(targetEntity = CarEntity.class,fetch = FetchType.LAZY,mappedBy = "fuel")

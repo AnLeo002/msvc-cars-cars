@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "types")
 public class CarTypeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "car-type")
     private String typeCar;

@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "transmissions")
 public class TransmissionEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String transmission;
     private int speeds;

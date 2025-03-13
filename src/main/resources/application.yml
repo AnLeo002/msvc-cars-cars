@@ -5,7 +5,7 @@ spring:
     name: msvc-cars
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/cars
+    url: jdbc:mysql://localhost:3307/carsdb
     username: root
     password: sqlleo02
   jpa:
