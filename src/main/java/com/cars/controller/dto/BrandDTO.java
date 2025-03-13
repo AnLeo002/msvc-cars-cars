@@ -1,4 +1,6 @@
 package com.cars.controller.dto;
 
-public record BrandDTO() {
+import jakarta.validation.constraints.NotBlank;
+
+public record BrandDTO(@NotBlank String brand) {
 }
