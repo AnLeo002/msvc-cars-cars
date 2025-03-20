@@ -19,4 +19,7 @@ public class BrandEntity {
     private String brand;
     @OneToMany(targetEntity = CarEntity.class,fetch = FetchType.LAZY,mappedBy = "brand")
     private List<CarEntity> carList;
+    @OneToMany(targetEntity = ModelEntity.class,fetch = FetchType.LAZY,mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<ModelEntity> modelList;
+
 }
