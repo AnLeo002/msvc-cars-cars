@@ -16,8 +16,6 @@ public class CarEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
-        private String model;
-        private String version;
         private int age;
         private double km;
         private String color;
@@ -32,5 +30,10 @@ public class CarEntity {
         private CarTypeEntity type;
         @ManyToOne(targetEntity = TransmissionEntity.class,fetch = FetchType.LAZY)
         private TransmissionEntity transmission;
+        @ManyToOne(targetEntity = ModelEntity.class, fetch = FetchType.LAZY)
+        private ModelEntity model;
+        @ManyToOne(targetEntity = VersionEntity.class, fetch = FetchType.LAZY)
+        private VersionEntity version;
+
 
         }
