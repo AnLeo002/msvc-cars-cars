@@ -9,7 +9,6 @@ public interface ICarService {
     CarDTOResponse findById(Long id);
     List<CarDTOResponse> findAll();
     CarDTOResponse createCar(CarDTO carDTO);
-    CarDTOResponse findByModel(String model);
     CarDTOResponse updateCar(CarDTO carDTO,Long id);
     void deleteCar(Long id);
 }
