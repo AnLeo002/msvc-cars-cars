@@ -16,8 +16,8 @@ public class CarTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "car-type")
-    private String typeCar;
+    @Column(name = "type")
+    private String type;
     @OneToMany(targetEntity = CarEntity.class,fetch = FetchType.LAZY,mappedBy = "type")
     private List<CarEntity> carList;
 }
