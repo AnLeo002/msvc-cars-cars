@@ -21,7 +21,6 @@ public class ModelMapperConfig {
             CarEntity source = context.getSource();
             return new CarDTOResponse(
                     source.getId(),
-                    source.getModel(),
                     source.getAge(),
                     source.getKm(),
                     source.getColor(),
@@ -31,7 +30,9 @@ public class ModelMapperConfig {
                     source.getFuel() != null ? source.getFuel().getFuel() : "N/A",// Si `fuel` es null, asignar "N/A"
                     source.getBrand() != null ? source.getBrand().getBrand() : "N/A",
                     source.getTransmission() != null ? source.getTransmission().getTransmission() : "N/A",
-                    source.getType() != null ? source.getType().getType() : "N/A"
+                    source.getType() != null ? source.getType().getType() : "N/A",
+                    source.getModel() != null ? source.getModel().getModel() : "N/A",
+                    source.getVersion() != null ? source.getVersion().getVersion() : "N/A"
             );
         };
 
