@@ -1,6 +1,7 @@
 package com.cars.persistence;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -14,8 +15,10 @@ import java.math.BigDecimal;
 @Table(name = "cars")
 public class CarEntity {
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+        @Column(nullable = false, unique = true, length = 10)
+        @Pattern(regexp = "^[A-Z]{3}[0-9]{3}$|^[A-Z]{3}[0-9]{2}[A-Z]$",
+                message = "La placa debe tener el formato BDP018 o DGF87G")
+        private String plate;
         private int age;
         private double km;
         private String color;
