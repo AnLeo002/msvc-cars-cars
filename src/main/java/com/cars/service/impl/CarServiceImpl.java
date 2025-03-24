@@ -31,8 +31,8 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public CarDTOResponse findById(Long id) {
-        CarEntity car = repo.findById(id)
+    public CarDTOResponse findById(String plate) {
+        CarEntity car = repo.findById(plate.toUpperCase())
                 .orElseThrow(()-> new RuntimeException("El vehiculo no se encuentra registrado en base de datos"));
 
         return modelMapper.map(car, CarDTOResponse.class);
@@ -51,6 +51,9 @@ public class CarServiceImpl implements ICarService {
 
     @Override
     public CarDTOResponse createCar(CarDTO carDTO) {
+        if (repo.existsById(carDTO.plate())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "La placa ya está registrada");
+        }
 
         FuelTypeEntity fuelType = fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El combustible :"+carDTO.fuel() +" no existe"));
@@ -70,6 +73,7 @@ public class CarServiceImpl implements ICarService {
 
 
         CarEntity car = CarEntity.builder()
+                .plate(carDTO.plate().toUpperCase())
                 .age(carDTO.age())
                 .km(carDTO.km())
                 .color(carDTO.color())
@@ -93,8 +97,8 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public CarDTOResponse updateCar(CarDTO carDTO, Long id) {
-        CarEntity car = repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El vehiculo con el id :"+ id +" no existe"));
+    public CarDTOResponse updateCar(CarDTO carDTO, String plate) {
+        CarEntity car = repo.findById(plate).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El vehiculo con placa :"+ plate +" no existe"));
 
         FuelTypeEntity fuelType = fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel())
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El combustible:"+carDTO.fuel() +" no existe"));
@@ -114,7 +118,6 @@ public class CarServiceImpl implements ICarService {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "El modelo '" + carDTO.model() + "' no pertenece a la marca '" + carDTO.brand() + "'");
         }
-
         car.setAge(carDTO.age());
         car.setKm(carDTO.km());
         car.setColor(carDTO.color());
@@ -134,9 +137,9 @@ public class CarServiceImpl implements ICarService {
     }
 
     @Override
-    public void deleteCar(Long id) {
+    public void deleteCar(String plate) {
         try {
-            repo.deleteById(id);
+            repo.deleteById(plate);
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "No se puede eliminar el vehiculo porque está en uso.");
         }
