@@ -20,7 +20,7 @@ public class ModelMapperConfig {
         Converter<CarEntity, CarDTOResponse> carToDtoConverter = context -> {
             CarEntity source = context.getSource();
             return new CarDTOResponse(
-                    source.getId(),
+                    source.getPlate().toUpperCase(),
                     source.getAge(),
                     source.getKm(),
                     source.getColor(),
