@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 
-public record CarDTOResponse(@NotBlank Long id,
+public record CarDTOResponse(@NotBlank String plate,
                              @NotBlank int age,
                              @NotBlank double km,
                              @NotBlank String color,
