@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 
-public record CarDTOResponse(@NotBlank String plate,
+public record  CarDTOResponse(@NotBlank String plate,
                              @NotBlank int age,
                              @NotBlank double km,
                              @NotBlank String color,
@@ -14,7 +14,7 @@ public record CarDTOResponse(@NotBlank String plate,
                              @NotBlank BigDecimal price,
                              @NotBlank String fuel,
                              @NotBlank String brand,
-                             @NotBlank String transmission,
+                             @NotBlank TransmissionDTOResponse transmission,
                              @NotBlank String type,
 
                              @NotBlank String model,
