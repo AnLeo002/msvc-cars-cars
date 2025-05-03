@@ -1,6 +1,7 @@
 package com.cars.config;
 
 import com.cars.controller.dto.CarDTOResponse;
+import com.cars.controller.dto.TransmissionDTOResponse;
 import com.cars.persistence.CarEntity;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,13 @@ public class ModelMapperConfig {
         // Mapeo de CarEntity -> CarDTOResponse
         Converter<CarEntity, CarDTOResponse> carToDtoConverter = context -> {
             CarEntity source = context.getSource();
+            TransmissionDTOResponse transmissionDTOResponse = null;
+            if (source.getTransmission()!=null){
+                 transmissionDTOResponse = new TransmissionDTOResponse(
+                         source.getTransmission().getId(),
+                         source.getTransmission().getTransmission(),
+                         source.getTransmission().getSpeeds());
+            }
             return new CarDTOResponse(
                     source.getPlate().toUpperCase(),
                     source.getAge(),
@@ -29,7 +37,7 @@ public class ModelMapperConfig {
                     source.getPrice() != null ? source.getPrice() : BigDecimal.ZERO,// Si `price` es null, asignar 0.00
                     source.getFuel() != null ? source.getFuel().getFuel() : "N/A",// Si `fuel` es null, asignar "N/A"
                     source.getBrand() != null ? source.getBrand().getBrand() : "N/A",
-                    source.getTransmission() != null ? source.getTransmission().getTransmission() : "N/A",
+                    transmissionDTOResponse,
                     source.getType() != null ? source.getType().getType() : "N/A",
                     source.getModel() != null ? source.getModel().getModel() : "N/A",
                     source.getVersion() != null ? source.getVersion().getVersion() : "N/A"
