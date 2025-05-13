@@ -87,7 +87,6 @@ public class CarServiceImpl implements ICarService {
                 .model(model)
                 .version(version)
                 .build();
-
         try {
             CarEntity carSave = repo.save(car);
             return modelMapper.map(carSave, CarDTOResponse.class);
