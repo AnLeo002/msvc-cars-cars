@@ -92,14 +92,19 @@ public class CarServiceImpl implements ICarService {
         car.setType(components.carType());
         car.setModel(components.model());
         car.setVersion(components.version());
-
-        CarEntity savedCar  = repo.save(car);
-
-        return modelMapper.map(savedCar ,CarDTOResponse.class);
+        try {
+            CarEntity savedCar  = repo.save(car);
+            return modelMapper.map(savedCar , CarDTOResponse.class);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al actualizar el vehiculo", e);
+        }
     }
 
     @Override
     public void deleteCar(String plate) {
+        if (!repo.existsById(plate)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El vehículo no existe.");
+        }
         try {
             repo.deleteById(plate);
         }catch (Exception e){
