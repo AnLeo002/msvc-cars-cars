@@ -30,9 +30,9 @@ public class CarController {
     public ResponseEntity<CarDTOResponse> createCar(@RequestBody @Valid CarDTO carDTO){
         return new ResponseEntity<>(service.createCar(carDTO), HttpStatus.CREATED);
     }
-    @PutMapping("/update/{plate}")
-    public ResponseEntity<CarDTOResponse> updateCar(@RequestBody @Valid CarDTO carDTO, @PathVariable String plate){
-        return ResponseEntity.ok(service.updateCar(carDTO,plate));
+    @PutMapping("/update")
+    public ResponseEntity<CarDTOResponse> updateCar(@RequestBody @Valid CarDTO carDTO){
+        return ResponseEntity.ok(service.updateCar(carDTO));
     }
     @DeleteMapping("/delete/{plate}")
     public ResponseEntity<String> deleteCar(@PathVariable String plate){
