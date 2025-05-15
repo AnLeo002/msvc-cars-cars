@@ -9,6 +9,6 @@ public interface ICarService {
     CarDTOResponse findById(String plate);
     List<CarDTOResponse> findAll();
     CarDTOResponse createCar(CarDTO carDTO);
-    CarDTOResponse updateCar(CarDTO carDTO,String plate);
+    CarDTOResponse updateCar(CarDTO carDTO);
     void deleteCar(String plate);
 }
