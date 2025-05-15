@@ -5,6 +5,7 @@ import com.cars.controller.dto.CarDTOResponse;
 import com.cars.persistence.*;
 import com.cars.repo.*;
 import com.cars.service.ICarService;
+import com.cars.service.record.CarValidateComponents;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,13 @@ import java.util.List;
 @Service
 public class CarServiceImpl implements ICarService {
     private final CarRepo repo;
-    private final CarTypeRepo carTypeRepo;
-    private final FuelTypeRepo fuelTypeRepo;
-    private final TransmissionRepo transmissionRepo;
-    private final ModelRepo modelRepo;
     private final ModelMapper modelMapper;
+    private final CarValidationService carValidationService;
 
-    public CarServiceImpl(CarRepo repo, CarTypeRepo carTypeRepo, FuelTypeRepo fuelTypeRepo, TransmissionRepo transmissionRepo, ModelRepo modelRepo, ModelMapper modelMapper) {
+    public CarServiceImpl(CarRepo repo, ModelMapper modelMapper, CarValidationService carValidationService) {
         this.repo = repo;
-        this.carTypeRepo = carTypeRepo;
-        this.fuelTypeRepo = fuelTypeRepo;
-        this.transmissionRepo = transmissionRepo;
-        this.modelRepo = modelRepo;
         this.modelMapper = modelMapper;
+        this.carValidationService = carValidationService;
     }
 
     @Override
@@ -54,23 +49,7 @@ public class CarServiceImpl implements ICarService {
         if (repo.existsById(carDTO.plate())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "La placa ya está registrada");
         }
-
-        FuelTypeEntity fuelType = fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El combustible :"+carDTO.fuel() +" no existe"));
-        TransmissionEntity transmission = transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(carDTO.transmission().transmission(),carDTO.transmission().speeds())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"La transmission: "+carDTO.transmission() +" no existe"));
-        CarTypeEntity carType = carTypeRepo.findByTypeIgnoreCase(carDTO.type())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El tipo de vehiculo: "+carDTO.type() +" no existe"));
-        ModelEntity model = modelRepo.findByModelIgnoreCase(carDTO.model())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El modelo: "+carDTO.model() +" no existe"));
-        VersionEntity version = model.getVersionEntities().stream().filter(versionEntity -> versionEntity.getVersion().equalsIgnoreCase(carDTO.version()))
-                .findFirst()
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.CONFLICT,"La version que se esta buscando no se encuentra o no le pertenece a este modelo"));
-        if (!model.getBrand().getBrand().equalsIgnoreCase(carDTO.brand())) {//Si el modelo no tiene la misma marca que el dto lanza error
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "El modelo '" + carDTO.model() + "' no pertenece a la marca '" + carDTO.brand() + "'");
-        }
-
+        CarValidateComponents components = carValidationService.verifiedCarDTO(carDTO);
 
         CarEntity car = CarEntity.builder()
                 .plate(carDTO.plate().toUpperCase())
@@ -80,59 +59,43 @@ public class CarServiceImpl implements ICarService {
                 .description(carDTO.description())
                 .price(carDTO.price())
                 .motor(carDTO.motor())
-                .brand(model.getBrand())
-                .fuel(fuelType)
-                .transmission(transmission)
-                .type(carType)
-                .model(model)
-                .version(version)
+                .brand(components.model().getBrand())
+                .fuel(components.fuelType())
+                .transmission(components.transmission())
+                .type(components.carType())
+                .model(components.model())
+                .version(components.version())
                 .build();
         try {
-            CarEntity carSave = repo.save(car);
-            return modelMapper.map(carSave, CarDTOResponse.class);
+            CarEntity savedCar  = repo.save(car);
+            return modelMapper.map(savedCar , CarDTOResponse.class);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar el vehiculo", e);
         }
     }
 
     @Override
-    public CarDTOResponse updateCar(CarDTO carDTO, String plate) {
-        CarEntity car = repo.findById(plate).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El vehiculo con placa :"+ plate +" no existe"));
+    public CarDTOResponse updateCar(CarDTO carDTO) {
+        CarEntity car = repo.findById(carDTO.plate()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El vehiculo con placa :"+ carDTO.plate() +" no existe"));
 
-        FuelTypeEntity fuelType = fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El combustible:"+carDTO.fuel() +" no existe"));
-        TransmissionEntity transmission = transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(carDTO.transmission().transmission(),carDTO.transmission().speeds())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"La transmission:"+carDTO.transmission() +" no existe"));
-        CarTypeEntity carType = carTypeRepo.findByTypeIgnoreCase(carDTO.type())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El tipo de vehiculo:"+carDTO.type() +" no existe"));
-        ModelEntity model = modelRepo.findByModelIgnoreCase(carDTO.model())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El modelo: "+carDTO.model() +" no existe"));
-        VersionEntity version = model.getVersionEntities().stream()
-                .filter(versionEntity -> versionEntity.getVersion().equalsIgnoreCase(carDTO.version()))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT,
-                        "La versión '" + carDTO.version() + "' no pertenece al modelo '" + carDTO.model() + "'"));
+        CarValidateComponents components = carValidationService.verifiedCarDTO(carDTO);
 
-        if (!model.getBrand().getBrand().equalsIgnoreCase(carDTO.brand())) {//Si el modelo no tiene la misma marca que el dto lanza error
-            throw new ResponseStatusException(HttpStatus.CONFLICT,
-                    "El modelo '" + carDTO.model() + "' no pertenece a la marca '" + carDTO.brand() + "'");
-        }
         car.setAge(carDTO.age());
         car.setKm(carDTO.km());
         car.setColor(carDTO.color());
         car.setDescription(carDTO.description());
         car.setMotor(carDTO.motor());
         car.setPrice(carDTO.price());
-        car.setBrand(model.getBrand());
-        car.setFuel(fuelType);
-        car.setTransmission(transmission);
-        car.setType(carType);
-        car.setModel(model);
-        car.setVersion(version);
+        car.setBrand(components.model().getBrand());
+        car.setFuel(components.fuelType());
+        car.setTransmission(components.transmission());
+        car.setType(components.carType());
+        car.setModel(components.model());
+        car.setVersion(components.version());
 
-        CarEntity carSave = repo.save(car);
+        CarEntity savedCar  = repo.save(car);
 
-        return modelMapper.map(carSave,CarDTOResponse.class);
+        return modelMapper.map(savedCar ,CarDTOResponse.class);
     }
 
     @Override
