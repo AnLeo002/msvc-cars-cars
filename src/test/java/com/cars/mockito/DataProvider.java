@@ -50,6 +50,14 @@ public class DataProvider {
         model.setBrand(createTestBrand());
         return model;
     }
+    public static ModelEntity createTestModelVersionEmpty(){
+        ModelEntity model = new ModelEntity();
+        model.setId(1L);
+        model.setVersionEntities(Set.of());
+        model.setModel("sentra");
+        model.setBrand(createTestBrand());
+        return model;
+    }
     public static CarEntity createTestCar(String plate) {
         CarEntity car = new CarEntity();
         car.setPlate(plate);
@@ -100,7 +108,7 @@ public class DataProvider {
                 car.getVersion().getVersion()
         );
     }
-    public static CarDTO createTestCarDTO(String plate){
+    public static CarDTO createTestCarDTO(String plate,String brand){
 
         TransmissionDTO transmissionDTO = new TransmissionDTO(
                 "automatica",
@@ -114,7 +122,7 @@ public class DataProvider {
                 "1.6",
                 BigDecimal.valueOf(23000000),
                 "corriente",
-                "nissan",
+                brand,
                 transmissionDTO,
                 "sedan",
                 "sentra",
