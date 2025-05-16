@@ -48,7 +48,7 @@ public class FuelTypeServiceImpl implements IFuelTypeService {
 
     @Override
     public FuelTypeDTOResponse updateFuelType(FuelTypeDTO fuelTypeDTO, Long id) {
-        FuelTypeEntity fuel = repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NO_CONTENT, "El combustible no se encuentra en la base de datos"));
+        FuelTypeEntity fuel = repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "El combustible no se encuentra en la base de datos"));
         fuel.setFuel(fuelTypeDTO.fuel());
         FuelTypeEntity fuelSave = repo.save(fuel);
         return new FuelTypeDTOResponse(fuelSave.getId(), fuelSave.getFuel());
@@ -56,6 +56,9 @@ public class FuelTypeServiceImpl implements IFuelTypeService {
 
     @Override
     public void deleteFuelType(Long id) {
+        if (!repo.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Este id no se encuentra en la base de datos");
+        }
         try {
             repo.deleteById(id);
         }catch (Exception e){
