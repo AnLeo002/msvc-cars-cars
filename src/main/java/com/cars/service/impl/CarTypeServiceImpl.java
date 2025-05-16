@@ -22,7 +22,7 @@ public class CarTypeServiceImpl implements ICarTypeService {
     public CarTypeDTOResponse findById(Long id) {
         return repo.findById(id)
                 .map(type -> new CarTypeDTOResponse(type.getId(), type.getType()))
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NO_CONTENT, "No se encuentra el tipo de vehiculo en la base de datos"));
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encuentra el tipo de vehiculo en la base de datos"));
     }
 
     @Override
@@ -62,6 +62,9 @@ public class CarTypeServiceImpl implements ICarTypeService {
 
     @Override
     public void deleteTypeCar(Long id) {
+        if(!repo.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El type de vehiculo no se encuentra en la base de datos");
+        }
         try {
             repo.deleteById(id);
         }catch (Exception e){
