@@ -19,11 +19,10 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
-public class CarServiceCreateImplTest {
+class CarServiceCreateImplTest {
     @Mock
     private CarRepo carRepo;
     @Mock
@@ -60,7 +59,7 @@ public class CarServiceCreateImplTest {
         assertEquals("BDP018",result.plate());
         assertEquals("nissan",result.brand());
         // Verificaciones de interacción correctas
-        verify(carRepo, times(1)).existsById(eq(carDTO.plate()));
+        verify(carRepo, times(1)).existsById(carDTO.plate());
         verify(carRepo, times(1)).save(any(CarEntity.class));
     }
     @Test
@@ -84,158 +83,4 @@ public class CarServiceCreateImplTest {
             carService.createCar(carDTO);
         });
     }
-    /*@Test
-    void testCreateCar(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(carRepo.save(any(CarEntity.class))).thenReturn(testCar);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.of(DataProvider.createTestCarType()));
-        when(modelRepo.findByModelIgnoreCase(carDTO.model())).thenReturn(
-                Optional.of(DataProvider.createTestModel()));
-        when(modelMapper.map(testCar, CarDTOResponse.class)).
-                thenReturn(DataProvider.createTestCarMapResponse(testCar));
-        //Then
-        CarDTOResponse result = carService.createCar(carDTO);
-        assertNotNull(result);
-        assertEquals("BDP018",result.plate());
-        assertEquals("nissan",result.brand());
-        // Verificaciones de interacción correctas
-        verify(carRepo, times(1)).existsById(eq(carDTO.plate()));
-        verify(carRepo, times(1)).save(any(CarEntity.class));
-    }
-
-    @Test
-    void testCreateCarFuelNoExist(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.empty());
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testCreateCarTransNoExist(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.empty());
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testCreateCarTypeNoExist() {
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.empty());
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.empty());
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testModelNoExist(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.of(DataProvider.createTestCarType()));
-        when(modelRepo.findByModelIgnoreCase(carDTO.model())).thenReturn(
-                Optional.empty());
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testVersionNoExist(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.empty());
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.of(DataProvider.createTestCarType()));
-        when(modelRepo.findByModelIgnoreCase(carDTO.model())).thenReturn(
-                Optional.of(DataProvider.createTestModelVersionEmpty()));
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testBrandDifferentToDto(){
-        carDTO = DataProvider.createTestCarDTO("BDP018","ferrari");
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.empty());
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.of(DataProvider.createTestCarType()));
-        when(modelRepo.findByModelIgnoreCase(carDTO.model())).thenReturn(
-                Optional.of(DataProvider.createTestModel()));
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }
-    @Test
-    void testCreateCarCatch(){
-        //When
-        when(carRepo.existsById(eq(carDTO.plate()))).thenReturn(false);
-        when(carRepo.save(any())).thenReturn(CarDTO.class);
-        when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
-                carDTO.transmission().transmission(),
-                carDTO.transmission().speeds()))
-                .thenReturn(Optional.of(DataProvider.createTestTrans()));
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
-        when(carTypeRepo.findByTypeIgnoreCase(carDTO.type())).thenReturn(
-                Optional.of(DataProvider.createTestCarType()));
-        when(modelRepo.findByModelIgnoreCase(carDTO.model())).thenReturn(
-                Optional.of(DataProvider.createTestModel()));
-        //Given
-        assertThrows(ResponseStatusException.class,()->{
-            carService.createCar(carDTO);
-        });
-    }*/
 }
