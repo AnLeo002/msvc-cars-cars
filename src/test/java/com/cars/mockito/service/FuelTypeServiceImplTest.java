@@ -1,4 +1,4 @@
-package com.cars.mockito.service.fuelTypeServiceImpl;
+package com.cars.mockito.service;
 
 import com.cars.controller.dto.FuelTypeDTO;
 import com.cars.controller.dto.FuelTypeDTOResponse;
