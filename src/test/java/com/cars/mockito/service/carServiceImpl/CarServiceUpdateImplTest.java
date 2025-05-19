@@ -6,7 +6,7 @@ import com.cars.mockito.DataProvider;
 import com.cars.persistence.CarEntity;
 import com.cars.repo.*;
 import com.cars.service.impl.CarServiceImpl;
-import com.cars.service.impl.CarValidationService;
+import com.cars.service.impl.EntityValidatorService;
 import com.cars.service.record.CarValidateComponents;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class CarServiceUpdateImplTest {
     @Mock
     private ModelMapper modelMapper;
     @Mock
-    private CarValidationService carValidationService;
+    private EntityValidatorService carValidationService;
     @InjectMocks
     private CarServiceImpl carService;
     CarEntity testCar;
