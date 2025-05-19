@@ -53,11 +53,12 @@ public class EntityValidatorService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El modelo no existe"));
     }
 
-    public VersionEntity validateVersion(String version, ModelEntity model) {
-        return model.getVersionEntities().stream()
+    public VersionEntity validateVersion(String version, String model) {
+        ModelEntity modelFind = validateModel(model);
+        return modelFind.getVersionEntities().stream()
                 .filter(v -> v.getVersion().equalsIgnoreCase(version))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "La versión no pertenece al modelo"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "La versión '" + version + "' no pertenece al modelo '" + model + "'"));
     }
     public Set<VersionEntity> validateAllVersions(List<String> versionsString){
         return versionRepo.findByVersionIn(versionsString)
@@ -78,7 +79,7 @@ public class EntityValidatorService {
         TransmissionEntity transmission = validateTransmission(carDTO.transmission().transmission(), carDTO.transmission().speeds());
         CarTypeEntity carType = validateCarType(carDTO.type());
         ModelEntity model = validateModel(carDTO.model());
-        VersionEntity version = validateVersion(carDTO.version(), model);
+        VersionEntity version = validateVersion(carDTO.version(), carDTO.model());
         validateBrandMatch(carDTO.brand(), model);
         return new CarValidateComponents(fuel,transmission,carType,model,version);
     }
