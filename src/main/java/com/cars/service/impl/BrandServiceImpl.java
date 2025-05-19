@@ -64,6 +64,9 @@ public class BrandServiceImpl implements IBrandService {
 
     @Override
     public void deleteBrand(Long id) {
+        if (!repo.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"La marca de autos no se encuentra en la base de datos");
+        }
         try {
             repo.deleteById(id);
         }catch (Exception e){
