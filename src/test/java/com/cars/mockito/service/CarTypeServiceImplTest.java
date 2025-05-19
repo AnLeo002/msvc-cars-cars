@@ -1,4 +1,4 @@
-package com.cars.mockito.service.carTypeServiceImpl;
+package com.cars.mockito.service;
 
 import com.cars.controller.dto.CarTypeDTO;
 import com.cars.controller.dto.CarTypeDTOResponse;
