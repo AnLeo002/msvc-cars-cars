@@ -3,7 +3,7 @@ package com.cars.mockito.service;
 import com.cars.controller.dto.CarDTO;
 import com.cars.mockito.DataProvider;
 import com.cars.repo.*;
-import com.cars.service.impl.CarValidationService;
+import com.cars.service.impl.EntityValidatorService;
 import com.cars.service.record.CarValidateComponents;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class CarValidationServiceTest {
+class EntityValidatorServiceTest {
     @Mock
     private TransmissionRepo transmissionRepo;
     @Mock
@@ -31,7 +31,7 @@ class CarValidationServiceTest {
     @Mock
     private ModelRepo modelRepo;
     @InjectMocks
-    private CarValidationService carValidationService;
+    private EntityValidatorService carValidationService;
     private CarDTO carDTO;
     @BeforeEach
     void setUp(){
@@ -72,15 +72,13 @@ class CarValidationServiceTest {
     @Test
     void testCreateCarTransNoExist(){
         //When
-        when(fuelTypeRepo.findByFuelIgnoreCase(carDTO.fuel()))
-                .thenReturn(Optional.of(DataProvider.createTestFuel()));
         when(transmissionRepo.findByTransmissionIgnoreCaseAndSpeeds(
                 carDTO.transmission().transmission(),
                 carDTO.transmission().speeds()))
                 .thenReturn(Optional.empty());
         //Given
         assertThrows(ResponseStatusException.class,()->{
-            carValidationService.verifiedCarDTO(carDTO);
+            carValidationService.validateTransmission(carDTO.transmission().transmission(),carDTO.transmission().speeds());
         });
     }
     @Test
