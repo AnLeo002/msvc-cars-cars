@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 9191
 spring:
   application:
     name: msvc-cars
@@ -10,7 +10,7 @@ spring:
     password: sqlleo02
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
   config:
