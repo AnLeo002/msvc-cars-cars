@@ -9,6 +9,7 @@ import com.cars.repo.BrandRepo;
 import com.cars.repo.ModelRepo;
 import com.cars.repo.VersionRepo;
 import com.cars.service.IModelService;
+import com.cars.service.record.ModelValidateComponents;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,11 +23,13 @@ public class ModelServiceImpl implements IModelService {
     private final ModelRepo repo;
     private final BrandRepo brandRepo;
     private final VersionRepo versionRepo;
+    private final EntityValidatorService validatorService;
 
-    public ModelServiceImpl(ModelRepo repo, BrandRepo brandRepo, VersionRepo versionRepo) {
+    public ModelServiceImpl(ModelRepo repo, BrandRepo brandRepo, VersionRepo versionRepo, EntityValidatorService validatorService) {
         this.repo = repo;
         this.brandRepo = brandRepo;
         this.versionRepo = versionRepo;
+        this.validatorService = validatorService;
     }
 
     @Override
@@ -64,16 +67,14 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public ModelDTOResponse createModel(ModelDTO modelDTO) {
-        BrandEntity brand = brandRepo.findByBrandIgnoreCase(modelDTO.brand())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"La marca no se encuentra en la base de datos"));
-        Set<VersionEntity> versions = versionRepo.findByVersionIn(modelDTO.versions()).stream().collect(Collectors.toSet());
+        ModelValidateComponents modelValidate = validatorService.verifiedModelDTO(modelDTO);
         if(repo.findByModelIgnoreCase(modelDTO.model()).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"El modelo ya se encuentra en la base de datos");
         }
         ModelEntity model = ModelEntity.builder()
                 .model(modelDTO.model())
-                .brand(brand)
-                .versionEntities(versions)
+                .brand(modelValidate.brand())
+                .versionEntities(modelValidate.versions())
                 .build();
         ModelEntity modelSave = repo.save(model);
         return new ModelDTOResponse(
@@ -85,15 +86,12 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public ModelDTOResponse updateModel(ModelDTO modelDTO, Long id) {
-        BrandEntity brand =brandRepo.findByBrandIgnoreCase(modelDTO.brand())
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"La marca no se encuentra en la base de datos"));
-        Set<VersionEntity> versions = versionRepo.findByVersionIn(modelDTO.versions()).stream().collect(Collectors.toSet());
-
+        ModelValidateComponents modelValidate = validatorService.verifiedModelDTO(modelDTO);
         ModelEntity model = repo.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"El modelo no se encuentra en la base de datos"));
 
         model.setModel(modelDTO.model());
-        model.setBrand(brand);
-        model.setVersionEntities(versions);
+        model.setBrand(modelValidate.brand());
+        model.setVersionEntities(modelValidate.versions());
 
         ModelEntity modelUpdate = repo.save(model);
         return new ModelDTOResponse(
@@ -105,6 +103,9 @@ public class ModelServiceImpl implements IModelService {
 
     @Override
     public void deleteModel(Long id) {
+        if (!repo.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"El modelo no esta presente en la base de datos");
+        }
         try{
             repo.deleteById(id);
         }catch (Exception e){
