@@ -17,9 +17,9 @@ import java.util.List;
 public class CarServiceImpl implements ICarService {
     private final CarRepo repo;
     private final ModelMapper modelMapper;
-    private final CarValidationService carValidationService;
+    private final EntityValidatorService carValidationService;
 
-    public CarServiceImpl(CarRepo repo, ModelMapper modelMapper, CarValidationService carValidationService) {
+    public CarServiceImpl(CarRepo repo, ModelMapper modelMapper, EntityValidatorService carValidationService) {
         this.repo = repo;
         this.modelMapper = modelMapper;
         this.carValidationService = carValidationService;
