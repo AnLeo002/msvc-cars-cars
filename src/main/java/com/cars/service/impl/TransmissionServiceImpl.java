@@ -19,8 +19,8 @@ public class TransmissionServiceImpl implements ITransmissionService {
     }
 
     @Override
-    public TransmissionDTOResponse findByTransmission(String transmission) {
-        return repo.findByTransmissionIgnoreCase(transmission)
+    public TransmissionDTOResponse findByTransmissionAndSpeeds(TransmissionDTO transmissionDTO) {
+        return repo.findByTransmissionIgnoreCaseAndSpeeds(transmissionDTO.transmission(),transmissionDTO.speeds())
                 .map(trans -> new TransmissionDTOResponse(trans.getId(), trans.getTransmission(),trans.getSpeeds()))
                 .orElseThrow(()-> new ResponseStatusException(HttpStatus.NO_CONTENT, "No se encuentra esta transmisión en la base de datos"));
     }
