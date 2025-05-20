@@ -6,7 +6,7 @@ import com.cars.controller.dto.TransmissionDTOResponse;
 import java.util.List;
 
 public interface ITransmissionService {
-    TransmissionDTOResponse findByTransmission(String transmission);
+    TransmissionDTOResponse findByTransmissionAndSpeeds(TransmissionDTO transmissionDTO);
     List<TransmissionDTOResponse> findAll();
     TransmissionDTOResponse createTransmission(TransmissionDTO transmissionDTO);
     TransmissionDTOResponse updateTransmission(TransmissionDTO transmissionDTO,Long id);
