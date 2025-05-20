@@ -23,9 +23,9 @@ public class TransmissionController {
     public ResponseEntity<List<TransmissionDTOResponse>> findAll(){
         return ResponseEntity.ok(service.findAll());
     }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<TransmissionDTOResponse> findByName(@PathVariable String name){
-        return ResponseEntity.ok(service.findByTransmission(name));
+    @GetMapping("/find")
+    public ResponseEntity<TransmissionDTOResponse> findByName(@RequestBody TransmissionDTO transmissionDTO){
+        return ResponseEntity.ok(service.findByTransmissionAndSpeeds(transmissionDTO));
     }
     @PostMapping("/create")
     public ResponseEntity<TransmissionDTOResponse> createTransmission(@RequestBody TransmissionDTO transmissionDTO){
