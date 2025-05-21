@@ -53,7 +53,7 @@ public class VersionServiceImpl implements IVersionService {
 
     @Override
     public VersionDTOResponse updateVersion(VersionDTO versionDTO, Long id) {
-        VersionEntity version = repo.findByVersionIgnoreCase(versionDTO.version())
+        VersionEntity version = repo.findById(id)
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Esta versión no se encuentra en la base de datos"));
         version.setVersion(versionDTO.version());
 
@@ -63,6 +63,9 @@ public class VersionServiceImpl implements IVersionService {
 
     @Override
     public void deleteVersion(Long id) {
+        if(!repo.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"LA VERSION NO SE ENCUENTRA EN LA BASE DE DATOS");
+        }
         try{
             repo.deleteById(id);
         }catch (Exception e){
