@@ -59,6 +59,9 @@ public class TransmissionServiceImpl implements ITransmissionService {
 
     @Override
     public void deleteTransmission(Long id) {
+        if(!repo.existsById(id)){
+            throw  new ResponseStatusException(HttpStatus.NOT_FOUND,"La transmision no se encuentra en la base de datos");
+        }
         try {
             repo.deleteById(id);
         }catch (Exception e){
