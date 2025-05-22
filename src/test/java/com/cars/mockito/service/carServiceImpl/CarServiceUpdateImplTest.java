@@ -40,7 +40,7 @@ class CarServiceUpdateImplTest {
     @BeforeEach
     void setup(){
         testCar = DataProvider.createTestCar("BDP018");
-        carDTO = DataProvider.createTestCarDTO("BDP018","nissan");
+        carDTO = DataProvider.createTestCarDTO("BDP018","rojo");
         components = new CarValidateComponents(
                 DataProvider.createTestFuel(),
                 DataProvider.createTestTrans(),
