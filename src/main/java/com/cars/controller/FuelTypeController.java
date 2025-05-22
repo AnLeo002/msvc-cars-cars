@@ -23,7 +23,7 @@ public class FuelTypeController {
         return ResponseEntity.ok(service.findAll());
     }
     @GetMapping("/{fuel}")
-    public ResponseEntity<FuelTypeDTOResponse> findById(@PathVariable String fuel){
+    public ResponseEntity<FuelTypeDTOResponse> findByFuel(@PathVariable String fuel){
         return ResponseEntity.ok(service.findByFuel(fuel));
     }
     @PostMapping("/create")
