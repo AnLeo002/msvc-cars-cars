@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class CarServiceImplTest {
+class CarServiceImplTest {
     @Mock
     private  CarRepo carRepo;
     @Mock
@@ -36,7 +36,7 @@ public class CarServiceImplTest {
     @BeforeEach
     void setup(){
         testCar = DataProvider.createTestCar("BDP018");
-        carDTO = DataProvider.createTestCarDTO("BDP018","nissan");
+        carDTO = DataProvider.createTestCarDTO("BDP018","azul");
     }
     @Test
     void testFindById(){
