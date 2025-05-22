@@ -76,8 +76,6 @@ public class DataProvider {
         car.setModel(createTestModel());
         car.setVersion(createTestVersion());
 
-        System.out.println(car.getPlate());
-
         return car;
     }
     public static List<CarEntity> createTestCarList() {
