@@ -44,7 +44,7 @@ class EntityValidatorServiceTest {
     private CarDTO carDTO;
     @BeforeEach
     void setUp(){
-        carDTO = DataProvider.createTestCarDTO("BDP018","nissan");
+        carDTO = DataProvider.createTestCarDTO("BDP018","gris");
     }
     @Test
     void testVerifiedCarDTO(){
