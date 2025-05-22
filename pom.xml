@@ -108,7 +108,7 @@
 						</goals>
 						<configuration>
 							<excludes>
-								<exclude>**/Main.class</exclude>
+								<exclude>**/CarsApplication.class</exclude>
 								<exclude>**/persistence/CarEntity.class</exclude>
 								<exclude>**/persistence/BrandEntity.class</exclude>
 								<exclude>**/persistence/CarTypeEntity.class</exclude>
