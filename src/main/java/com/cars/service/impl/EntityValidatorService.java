@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-//Esta clase se encarga de validar informacion en la base de datos
+//Esta clase se encarga de validar información en la base de datos
 @Service
 public class EntityValidatorService {
     private final CarTypeRepo carTypeRepo;
