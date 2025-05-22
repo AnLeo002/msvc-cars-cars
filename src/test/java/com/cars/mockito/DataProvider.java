@@ -108,7 +108,7 @@ public class DataProvider {
                 car.getVersion().getVersion()
         );
     }
-    public static CarDTO createTestCarDTO(String plate,String brand){
+    public static CarDTO createTestCarDTO(String plate,String color){
 
         TransmissionDTO transmissionDTO = new TransmissionDTO(
                 "automatica",
@@ -117,12 +117,12 @@ public class DataProvider {
                 plate,
                 1993,
                 199923,
-                "Champaña",
+                color,
                 "Hermoso Nissan Sentra B13 único dueño",
                 "1.6",
                 BigDecimal.valueOf(23000000),
                 "corriente",
-                brand,
+                "nissan",
                 transmissionDTO,
                 "sedan",
                 "sentra",
