@@ -26,8 +26,8 @@ public class ModelController {
     public ResponseEntity<ModelDTOResponse> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.findById(id));
     }
-    @GetMapping("/{version}")
-    public ResponseEntity<ModelDTOResponse> findByVersion(@PathVariable String model){
+    @GetMapping("/{model}")
+    public ResponseEntity<ModelDTOResponse> findByModel(@PathVariable String model){
         return ResponseEntity.ok(service.findByModel(model));
     }
     @PostMapping("/create")
