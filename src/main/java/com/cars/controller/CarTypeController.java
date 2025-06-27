@@ -3,6 +3,7 @@ package com.cars.controller;
 import com.cars.controller.dto.CarTypeDTO;
 import com.cars.controller.dto.CarTypeDTOResponse;
 import com.cars.service.ICarTypeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,11 @@ public class CarTypeController {
         return ResponseEntity.ok(service.findById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<CarTypeDTOResponse> createCarType(@RequestBody CarTypeDTO carTypeDTO){
+    public ResponseEntity<CarTypeDTOResponse> createCarType(@RequestBody @Valid CarTypeDTO carTypeDTO){
         return new ResponseEntity<>(service.createType(carTypeDTO), HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<CarTypeDTOResponse> updateCarType(@RequestBody CarTypeDTO carTypeDTO, @PathVariable Long id){
+    public ResponseEntity<CarTypeDTOResponse> updateCarType(@RequestBody @Valid CarTypeDTO carTypeDTO, @PathVariable Long id){
         return ResponseEntity.ok(service.updateTypeCar(carTypeDTO,id));
     }
     @DeleteMapping("/delete/{id}")
