@@ -5,9 +5,9 @@ spring:
     name: msvc-cars
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/carsdb
-    username: root
-    password: sqlleo02
+    url: jdbc:mysql://car_database:3306/carsdb
+    username: leo
+    password: sqlLeo02
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,8 +17,8 @@ spring:
     import: optional:configserver:http://localhost:8888
 
 eureka:
-  instance:
-    hostname: localhost
   client:
+    register-with-eureka: true
+    fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://msvc-eureka:8761/eureka
