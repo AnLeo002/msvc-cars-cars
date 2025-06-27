@@ -4,6 +4,7 @@ import com.cars.controller.dto.TransmissionDTO;
 import com.cars.controller.dto.TransmissionDTOResponse;
 import com.cars.service.ITransmissionService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,15 +25,15 @@ public class TransmissionController {
         return ResponseEntity.ok(service.findAll());
     }
     @GetMapping("/find")
-    public ResponseEntity<TransmissionDTOResponse> findByName(@RequestBody TransmissionDTO transmissionDTO){
+    public ResponseEntity<TransmissionDTOResponse> findByName(@RequestBody @Valid TransmissionDTO transmissionDTO){
         return ResponseEntity.ok(service.findByTransmissionAndSpeeds(transmissionDTO));
     }
     @PostMapping("/create")
-    public ResponseEntity<TransmissionDTOResponse> createTransmission(@RequestBody TransmissionDTO transmissionDTO){
+    public ResponseEntity<TransmissionDTOResponse> createTransmission(@RequestBody @Valid TransmissionDTO transmissionDTO){
         return new ResponseEntity<>(service.createTransmission(transmissionDTO), HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<TransmissionDTOResponse> updateTransmission(@RequestBody TransmissionDTO transmissionDTO, @PathVariable Long id){
+    public ResponseEntity<TransmissionDTOResponse> updateTransmission(@RequestBody @Valid TransmissionDTO transmissionDTO, @PathVariable Long id){
         return ResponseEntity.ok(service.updateTransmission(transmissionDTO,id));
     }
     @DeleteMapping("/delete/{id}")
