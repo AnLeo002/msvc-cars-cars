@@ -1,0 +1,60 @@
+services:
+  eureka:
+    build:
+      context: ../Eureka
+      dockerfile: Dockerfile
+    image: eureka-msvc-image
+    container_name: msvc-eureka
+    environment:
+      EUREKA_HOSTNAME: msvc-eureka
+      EUREKA_HOST: msvc-eureka
+      EUREKA_PORT: 8761
+    ports:
+      - "8761:8761"
+    networks:
+      - spring-network
+  gateway:
+    build:
+      context: ../Gateway
+      dockerfile: Dockerfile
+    image: gateway-msvc-image
+    container_name: msvc-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-network
+    depends_on:
+      - eureka
+  cars:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cars-msvc-image
+    container_name: msvc-cars
+    ports:
+      - "9191:9191"
+    networks:
+      - spring-network
+    depends_on:
+      - mysql-cars
+      - eureka
+  mysql-cars:
+    image: mysql
+    container_name: car_database
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: carsdb
+      MYSQL_USER: leo
+      MYSQL_PASSWORD: sqlLeo02
+    ports:
+      - "3307:3306"
+    networks:
+      - spring-network
+    volumes:
+      - mysql-volume:/var/lib/mysql
+#Redes permite conectar los contenedores
+networks:
+  #Nombre de la red, si todos tienen este nombre de red significa que todos los contenedores se conectan
+  spring-network:
+volumes:
+  mysql-volume:
