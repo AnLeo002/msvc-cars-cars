@@ -3,6 +3,7 @@ package com.cars.controller;
 import com.cars.controller.dto.BrandDTO;
 import com.cars.controller.dto.BrandDTOResponse;
 import com.cars.service.IBrandService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,11 @@ public class BrandController {
         return ResponseEntity.ok(service.findById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<BrandDTOResponse> createBrand(@RequestBody BrandDTO brandDTO){
+    public ResponseEntity<BrandDTOResponse> createBrand(@RequestBody @Valid BrandDTO brandDTO){
         return new ResponseEntity<>(service.createBrand(brandDTO), HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<BrandDTOResponse> updateBrand(@RequestBody BrandDTO brandDTO, @PathVariable Long id){
+    public ResponseEntity<BrandDTOResponse> updateBrand(@RequestBody @Valid BrandDTO brandDTO, @PathVariable Long id){
         return ResponseEntity.ok(service.updateBrand(brandDTO,id));
     }
     @DeleteMapping("/delete/{id}")
