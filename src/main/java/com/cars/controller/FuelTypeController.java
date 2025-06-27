@@ -3,6 +3,7 @@ package com.cars.controller;
 import com.cars.controller.dto.FuelTypeDTO;
 import com.cars.controller.dto.FuelTypeDTOResponse;
 import com.cars.service.IFuelTypeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +28,11 @@ public class FuelTypeController {
         return ResponseEntity.ok(service.findByFuel(fuel));
     }
     @PostMapping("/create")
-    public ResponseEntity<FuelTypeDTOResponse> createFuel(@RequestBody FuelTypeDTO fuelTypeDTO){
+    public ResponseEntity<FuelTypeDTOResponse> createFuel(@RequestBody @Valid FuelTypeDTO fuelTypeDTO){
         return new ResponseEntity<>(service.createFuelType(fuelTypeDTO), HttpStatus.CREATED);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<FuelTypeDTOResponse> updateFuel(@RequestBody FuelTypeDTO fuelTypeDTO, @PathVariable Long id){
+    public ResponseEntity<FuelTypeDTOResponse> updateFuel(@RequestBody @Valid FuelTypeDTO fuelTypeDTO, @PathVariable Long id){
         return ResponseEntity.ok(service.updateFuelType(fuelTypeDTO,id));
     }
     @DeleteMapping("/delete/{id}")
