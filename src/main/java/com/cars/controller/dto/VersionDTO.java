@@ -1,6 +1,6 @@
 package com.cars.controller.dto;
 
-import lombok.NonNull;
+import jakarta.validation.constraints.NotBlank;
 
-public record VersionDTO(@NonNull String version) {
+public record VersionDTO(@NotBlank String version) {
 }
