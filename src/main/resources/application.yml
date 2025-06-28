@@ -22,3 +22,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://msvc-eureka:8761/eureka
+
+gateway:
+  auth:
+    header: X-GATEWAY-SECRET
+    value: key-microservices
