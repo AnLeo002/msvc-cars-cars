@@ -1,11 +1,11 @@
 package com.cars.controller.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public record ModelDTOResponse(@NotNull Long id,
-                               @NotNull String model,
-                               @NotNull String brand,
-                               @NotNull List<String> versions) {
+public record ModelDTOResponse(@NotBlank Long id,
+                               @NotBlank String model,
+                               @NotBlank String brand,
+                               @NotBlank List<String> versions) {
 }
